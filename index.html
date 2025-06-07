@@ -226,7 +226,11 @@
             </div>
             
             <div class="form-group">
-                <label for="photoUrl">Photo URL (optional)</label>
+                <label for="photoUrl">Photo URL (optional) 
+                    <span style="font-size: 12px; color: #7f8c8d; font-weight: normal;">
+                        💡 Upload photo to Google Photos, Dropbox, or email it to yourself, then paste the link here
+                    </span>
+                </label>
                 <input type="url" id="photoUrl" placeholder="https://example.com/photo.jpg">
             </div>
             
@@ -317,8 +321,24 @@
             </div>
             
             <div class="export-section">
-                <button class="btn" onclick="generateJSON()">Export Data as JSON</button>
-                <button class="btn" onclick="printPreview()">Print Preview</button>
+                <h3 style="color: #2c3e50; margin-bottom: 15px;">✅ Ready to Send?</h3>
+                <p style="margin-bottom: 20px; color: #7f8c8d;">Click the buttons below to send Blair the information:</p>
+                
+                <button class="btn" onclick="sendEmailToBlair()">📧 Email Blair</button>
+                <button class="btn" onclick="sendSMSToBlair()">📱 Text Blair</button>
+                <button class="btn" onclick="printPreview()">🖨️ Print Preview</button>
+                
+                <div style="margin-top: 20px; padding: 15px; background: #f0f8ff; border-radius: 8px; border-left: 4px solid #3498db;">
+                    <h4 style="margin: 0 0 10px 0; color: #2c3e50;">💡 Want to send to yourself too?</h4>
+                    <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                        <input type="email" id="yourEmail" placeholder="your-email@example.com" style="flex: 1; min-width: 200px;">
+                        <button class="btn" onclick="sendToYourself('email')" style="margin: 0;">📧 Email Me</button>
+                    </div>
+                    <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-top: 10px;">
+                        <input type="tel" id="yourPhone" placeholder="555-123-4567" style="flex: 1; min-width: 200px;">
+                        <button class="btn" onclick="sendToYourself('sms')" style="margin: 0;">📱 Text Me</button>
+                    </div>
+                </div>
             </div>
         </div>
         
@@ -511,6 +531,176 @@
                 hour: 'numeric', 
                 minute: '2-digit',
                 hour12: true 
+            });
+        }
+        
+        function sendEmailToBlair() {
+            const summary = createFormattedSummary();
+            const subject = `Memorial Service Program Information - ${formData.fullName || 'Memorial Program'}`;
+            const body = encodeURIComponent(summary);
+            
+            // Direct email to Blair
+            window.location.href = `mailto:blairbryngelson@gmail.com?subject=${subject}&body=${body}`;
+            
+            // Copy to clipboard as backup
+            copyToClipboard(summary);
+            
+            showMessage('📧 Email opened! Blair will receive: blairbryngelson@gmail.com\n\nInfo also copied to clipboard as backup.', 'success');
+        }
+        
+        function sendSMSToBlair() {
+            const summary = createFormattedSummary();
+            
+            // SMS to Blair (this will open their texting app)
+            window.location.href = `sms:+17202759329?body=${encodeURIComponent('Memorial Program Info Ready!\n\n' + summary)}`;
+            
+            // Copy to clipboard as backup
+            copyToClipboard(summary);
+            
+            showMessage('📱 Text message opened! Blair will receive: 720-275-9329\n\nInfo also copied to clipboard as backup.', 'success');
+        }
+        
+        function sendToYourself(type) {
+            const summary = createFormattedSummary();
+            const subject = `Memorial Service Program Information - ${formData.fullName || 'Memorial Program'}`;
+            
+            if (type === 'email') {
+                const email = document.getElementById('yourEmail').value;
+                if (!email) {
+                    showMessage('❌ Please enter your email address first!', 'error');
+                    return;
+                }
+                const body = encodeURIComponent(summary);
+                window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
+                showMessage(`📧 Email sent to: ${email}`, 'success');
+            } else if (type === 'sms') {
+                const phone = document.getElementById('yourPhone').value;
+                if (!phone) {
+                    showMessage('❌ Please enter your phone number first!', 'error');
+                    return;
+                }
+                window.location.href = `sms:${phone}?body=${encodeURIComponent('Memorial Program Info:\n\n' + summary)}`;
+                showMessage(`📱 Text sent to: ${phone}`, 'success');
+            }
+            
+            copyToClipboard(summary);
+        }
+        
+        function createFormattedSummary() {
+            let summary = "MEMORIAL SERVICE PROGRAM INFORMATION\n";
+            summary += "=====================================\n\n";
+            
+            if (formData.fullName) summary += `FULL NAME: ${formData.fullName}\n`;
+            if (formData.birthDate) summary += `BIRTH DATE: ${formatDate(formData.birthDate)}\n`;
+            if (formData.passedDate) summary += `DATE OF PASSING: ${formatDate(formData.passedDate)}\n`;
+            if (formData.photoUrl) summary += `PHOTO URL: ${formData.photoUrl}\n`;
+            
+            summary += "\nSERVICE DETAILS:\n";
+            if (formData.serviceType) summary += `Service Type: ${formData.serviceType}\n`;
+            if (formData.serviceDate) summary += `Date: ${formatDate(formData.serviceDate)}\n`;
+            if (formData.serviceTime) summary += `Time: ${formatTime(formData.serviceTime)}\n`;
+            if (formData.serviceLocation) summary += `Location: ${formData.serviceLocation}\n`;
+            if (formData.serviceAddress) summary += `Address: ${formData.serviceAddress}\n`;
+            
+            if (formData.biography) summary += `\nLIFE STORY:\n${formData.biography}\n`;
+            if (formData.survivedBy) summary += `\nSURVIVED BY:\n${formData.survivedBy}\n`;
+            if (formData.predeceased) summary += `\nPREDECEASED BY:\n${formData.predeceased}\n`;
+            
+            if (formData.officiant) summary += `\nOFFICIANT: ${formData.officiant}\n`;
+            if (formData.speakers) summary += `\nSPEAKERS:\n${formData.speakers}\n`;
+            if (formData.pallbearers) summary += `\nPALLBEARERS:\n${formData.pallbearers}\n`;
+            if (formData.musicians) summary += `\nMUSICAL SELECTIONS:\n${formData.musicians}\n`;
+            
+            if (formData.donations) summary += `\nMEMORIAL DONATIONS:\n${formData.donations}\n`;
+            if (formData.reception) summary += `\nRECEPTION:\n${formData.reception}\n`;
+            if (formData.specialMessage) summary += `\nSPECIAL MESSAGE:\n${formData.specialMessage}\n`;
+            
+            return summary;
+        }
+        
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).catch(() => {
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = text;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+            });
+        }
+        
+        function showMessage(message, type) {
+            const messageDiv = document.createElement('div');
+            messageDiv.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 15px 20px;
+                background: ${type === 'success' ? '#d4edda' : '#f8d7da'};
+                color: ${type === 'success' ? '#155724' : '#721c24'};
+                border: 1px solid ${type === 'success' ? '#c3e6cb' : '#f5c6cb'};
+                border-radius: 8px;
+                z-index: 1000;
+                max-width: 350px;
+                font-size: 14px;
+                line-height: 1.4;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            `;
+            messageDiv.textContent = message;
+            
+            document.body.appendChild(messageDiv);
+            
+            // Remove message after 5 seconds
+            setTimeout(() => {
+                if (messageDiv.parentNode) {
+                    messageDiv.parentNode.removeChild(messageDiv);
+                }
+            }, 5000);
+        }
+        
+        function sendToBlair() {
+            // Create a formatted summary
+            let summary = "MEMORIAL SERVICE PROGRAM INFORMATION\n";
+            summary += "=====================================\n\n";
+            
+            if (formData.fullName) summary += `FULL NAME: ${formData.fullName}\n`;
+            if (formData.birthDate) summary += `BIRTH DATE: ${formatDate(formData.birthDate)}\n`;
+            if (formData.passedDate) summary += `DATE OF PASSING: ${formatDate(formData.passedDate)}\n`;
+            if (formData.photoUrl) summary += `PHOTO URL: ${formData.photoUrl}\n`;
+            
+            summary += "\nSERVICE DETAILS:\n";
+            if (formData.serviceType) summary += `Service Type: ${formData.serviceType}\n`;
+            if (formData.serviceDate) summary += `Date: ${formatDate(formData.serviceDate)}\n`;
+            if (formData.serviceTime) summary += `Time: ${formatTime(formData.serviceTime)}\n`;
+            if (formData.serviceLocation) summary += `Location: ${formData.serviceLocation}\n`;
+            if (formData.serviceAddress) summary += `Address: ${formData.serviceAddress}\n`;
+            
+            if (formData.biography) summary += `\nLIFE STORY:\n${formData.biography}\n`;
+            if (formData.survivedBy) summary += `\nSURVIVED BY:\n${formData.survivedBy}\n`;
+            if (formData.predeceased) summary += `\nPREDECEASED BY:\n${formData.predeceased}\n`;
+            
+            if (formData.officiant) summary += `\nOFFICIANT: ${formData.officiant}\n`;
+            if (formData.speakers) summary += `\nSPEAKERS:\n${formData.speakers}\n`;
+            if (formData.pallbearers) summary += `\nPALLBEARERS:\n${formData.pallbearers}\n`;
+            if (formData.musicians) summary += `\nMUSICAL SELECTIONS:\n${formData.musicians}\n`;
+            
+            if (formData.donations) summary += `\nMEMORIAL DONATIONS:\n${formData.donations}\n`;
+            if (formData.reception) summary += `\nRECEPTION:\n${formData.reception}\n`;
+            if (formData.specialMessage) summary += `\nSPECIAL MESSAGE:\n${formData.specialMessage}\n`;
+            
+            // Create email
+            const subject = `Memorial Service Program Information - ${formData.fullName || 'Memorial Program'}`;
+            const body = encodeURIComponent(summary);
+            
+            // Open email client
+            window.location.href = `mailto:?subject=${subject}&body=${body}`;
+            
+            // Also copy to clipboard as backup
+            navigator.clipboard.writeText(summary).then(() => {
+                alert('Information has been copied to your clipboard and an email draft has been created!\n\nYou can paste this information anywhere if needed.');
+            }).catch(() => {
+                alert('Email draft created! The information is ready to send.');
             });
         }
         
