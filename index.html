@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memorial Service Program Builder</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Georgia, serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        
+        .form-section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            height: fit-content;
+        }
+        
+        .preview-section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 20px;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 2.2em;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+        
+        h2 {
+            color: #34495e;
+            margin: 25px 0 15px 0;
+            font-size: 1.4em;
+            border-left: 4px solid #3498db;
+            padding-left: 10px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #bdc3c7;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 10px rgba(52, 152, 219, 0.3);
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        
+        .date-time-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .preview-program {
+            border: 3px solid #34495e;
+            padding: 30px;
+            background: #fdfdfd;
+            border-radius: 10px;
+            min-height: 600px;
+            font-family: Georgia, serif;
+        }
+        
+        .preview-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #bdc3c7;
+        }
+        
+        .preview-name {
+            font-size: 2.2em;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .preview-dates {
+            font-size: 1.1em;
+            color: #7f8c8d;
+            font-style: italic;
+        }
+        
+        .preview-photo {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            margin: 20px auto;
+            background: #ecf0f1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #95a5a6;
+            font-size: 14px;
+        }
+        
+        .preview-section h3 {
+            color: #2c3e50;
+            margin: 20px 0 10px 0;
+            font-size: 1.3em;
+            border-bottom: 1px solid #bdc3c7;
+            padding-bottom: 5px;
+        }
+        
+        .preview-content {
+            margin-bottom: 20px;
+            line-height: 1.8;
+        }
+        
+        .service-details {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        
+        .pallbearers-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s;
+            margin: 10px 5px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+        }
+        
+        .export-section {
+            margin-top: 30px;
+            text-align: center;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+            
+            .date-time-group {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="form-section">
+            <h1>Memorial Service Program Builder</h1>
+            
+            <h2>Basic Information</h2>
+            <div class="form-group">
+                <label for="fullName">Full Name</label>
+                <input type="text" id="fullName" placeholder="Enter full name">
+            </div>
+            
+            <div class="date-time-group">
+                <div class="form-group">
+                    <label for="birthDate">Birth Date</label>
+                    <input type="date" id="birthDate">
+                </div>
+                <div class="form-group">
+                    <label for="passedDate">Date of Passing</label>
+                    <input type="date" id="passedDate">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="photoUrl">Photo URL (optional)</label>
+                <input type="url" id="photoUrl" placeholder="https://example.com/photo.jpg">
+            </div>
+            
+            <h2>Service Details</h2>
+            <div class="form-group">
+                <label for="serviceDate">Service Date</label>
+                <input type="date" id="serviceDate">
+            </div>
+            
+            <div class="date-time-group">
+                <div class="form-group">
+                    <label for="serviceTime">Service Time</label>
+                    <input type="time" id="serviceTime">
+                </div>
+                <div class="form-group">
+                    <label for="serviceType">Service Type</label>
+                    <select id="serviceType">
+                        <option value="">Select service type</option>
+                        <option value="Memorial Service">Memorial Service</option>
+                        <option value="Celebration of Life">Celebration of Life</option>
+                        <option value="Funeral Service">Funeral Service</option>
+                        <option value="Remembrance Service">Remembrance Service</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="serviceLocation">Service Location</label>
+                <input type="text" id="serviceLocation" placeholder="Church, funeral home, or venue name">
+            </div>
+            
+            <div class="form-group">
+                <label for="serviceAddress">Service Address</label>
+                <textarea id="serviceAddress" placeholder="Full address"></textarea>
+            </div>
+            
+            <h2>Life Information</h2>
+            <div class="form-group">
+                <label for="biography">Biography/Life Story</label>
+                <textarea id="biography" placeholder="Share key moments, achievements, and memories..."></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="survivedBy">Survived By</label>
+                <textarea id="survivedBy" placeholder="List family members (spouse, children, grandchildren, etc.)"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="predeceased">Predeceased By</label>
+                <textarea id="predeceased" placeholder="Family members who passed before"></textarea>
+            </div>
+            
+            <h2>Service Participants</h2>
+            <div class="form-group">
+                <label for="officiant">Officiant/Celebrant</label>
+                <input type="text" id="officiant" placeholder="Name and title">
+            </div>
+            
+            <div class="form-group">
+                <label for="speakers">Speakers/Eulogists</label>
+                <textarea id="speakers" placeholder="List names and their relationship to the deceased"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="pallbearers">Pallbearers</label>
+                <textarea id="pallbearers" placeholder="List pallbearers' names (one per line)"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="musicians">Musical Selections</label>
+                <textarea id="musicians" placeholder="Songs, hymns, or musical performances"></textarea>
+            </div>
+            
+            <h2>Additional Information</h2>
+            <div class="form-group">
+                <label for="donations">Memorial Donations</label>
+                <textarea id="donations" placeholder="Preferred charities or causes in lieu of flowers"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="reception">Reception Details</label>
+                <textarea id="reception" placeholder="Location and time for reception/gathering after service"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="specialMessage">Special Message or Poem</label>
+                <textarea id="specialMessage" placeholder="Favorite quote, poem, or special message from family"></textarea>
+            </div>
+            
+            <div class="export-section">
+                <button class="btn" onclick="generateJSON()">Export Data as JSON</button>
+                <button class="btn" onclick="printPreview()">Print Preview</button>
+            </div>
+        </div>
+        
+        <div class="preview-section">
+            <h2 style="text-align: center; margin-bottom: 20px;">Live Preview</h2>
+            <div class="preview-program" id="previewProgram">
+                <div class="preview-header">
+                    <div class="preview-name" id="previewName">Full Name</div>
+                    <div class="preview-dates" id="previewDates">Birth Date - Date of Passing</div>
+                    <div class="preview-photo" id="previewPhoto">Photo will appear here</div>
+                </div>
+                
+                <div class="preview-content">
+                    <div class="service-details">
+                        <h3>Service Information</h3>
+                        <div id="previewServiceInfo">Service details will appear here</div>
+                    </div>
+                    
+                    <div id="previewBiography"></div>
+                    <div id="previewFamily"></div>
+                    <div id="previewParticipants"></div>
+                    <div id="previewAdditional"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const formData = {};
+        
+        // Add event listeners to all form inputs
+        document.querySelectorAll('input, textarea, select').forEach(input => {
+            input.addEventListener('input', updatePreview);
+        });
+        
+        function updatePreview() {
+            // Collect all form data
+            const inputs = document.querySelectorAll('input, textarea, select');
+            inputs.forEach(input => {
+                formData[input.id] = input.value;
+            });
+            
+            // Update preview sections
+            updateBasicInfo();
+            updateServiceInfo();
+            updateBiography();
+            updateFamily();
+            updateParticipants();
+            updateAdditional();
+        }
+        
+        function updateBasicInfo() {
+            const nameEl = document.getElementById('previewName');
+            const datesEl = document.getElementById('previewDates');
+            const photoEl = document.getElementById('previewPhoto');
+            
+            nameEl.textContent = formData.fullName || 'Full Name';
+            
+            let dateText = '';
+            if (formData.birthDate) dateText += formatDate(formData.birthDate);
+            if (formData.passedDate) {
+                if (dateText) dateText += ' - ';
+                dateText += formatDate(formData.passedDate);
+            }
+            datesEl.textContent = dateText || 'Birth Date - Date of Passing';
+            
+            if (formData.photoUrl) {
+                photoEl.innerHTML = `<img src="${formData.photoUrl}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;" alt="Memorial Photo">`;
+            } else {
+                photoEl.textContent = 'Photo will appear here';
+            }
+        }
+        
+        function updateServiceInfo() {
+            const serviceInfoEl = document.getElementById('previewServiceInfo');
+            let serviceHTML = '';
+            
+            if (formData.serviceType) {
+                serviceHTML += `<strong>${formData.serviceType}</strong><br>`;
+            }
+            
+            if (formData.serviceDate) {
+                serviceHTML += `<strong>Date:</strong> ${formatDate(formData.serviceDate)}<br>`;
+            }
+            
+            if (formData.serviceTime) {
+                serviceHTML += `<strong>Time:</strong> ${formatTime(formData.serviceTime)}<br>`;
+            }
+            
+            if (formData.serviceLocation) {
+                serviceHTML += `<strong>Location:</strong> ${formData.serviceLocation}<br>`;
+            }
+            
+            if (formData.serviceAddress) {
+                serviceHTML += `<strong>Address:</strong> ${formData.serviceAddress.replace(/\n/g, '<br>')}`;
+            }
+            
+            serviceInfoEl.innerHTML = serviceHTML || 'Service details will appear here';
+        }
+        
+        function updateBiography() {
+            const bioEl = document.getElementById('previewBiography');
+            let bioHTML = '';
+            
+            if (formData.biography) {
+                bioHTML += `<h3>Life Story</h3><div class="preview-content">${formData.biography.replace(/\n/g, '<br>')}</div>`;
+            }
+            
+            bioEl.innerHTML = bioHTML;
+        }
+        
+        function updateFamily() {
+            const familyEl = document.getElementById('previewFamily');
+            let familyHTML = '';
+            
+            if (formData.survivedBy) {
+                familyHTML += `<h3>Survived By</h3><div class="preview-content">${formData.survivedBy.replace(/\n/g, '<br>')}</div>`;
+            }
+            
+            if (formData.predeceased) {
+                familyHTML += `<h3>Predeceased By</h3><div class="preview-content">${formData.predeceased.replace(/\n/g, '<br>')}</div>`;
+            }
+            
+            familyEl.innerHTML = familyHTML;
+        }
+        
+        function updateParticipants() {
+            const participantsEl = document.getElementById('previewParticipants');
+            let participantsHTML = '';
+            
+            if (formData.officiant) {
+                participantsHTML += `<h3>Officiant</h3><div class="preview-content">${formData.officiant}</div>`;
+            }
+            
+            if (formData.speakers) {
+                participantsHTML += `<h3>Speakers</h3><div class="preview-content">${formData.speakers.replace(/\n/g, '<br>')}</div>`;
+            }
+            
+            if (formData.pallbearers) {
+                const pallbearersList = formData.pallbearers.split('\n').filter(p => p.trim());
+                if (pallbearersList.length > 0) {
+                    participantsHTML += `<h3>Pallbearers</h3><div class="pallbearers-list">`;
+                    pallbearersList.forEach(pallbearer => {
+                        participantsHTML += `<div>${pallbearer.trim()}</div>`;
+                    });
+                    participantsHTML += `</div>`;
+                }
+            }
+            
+            if (formData.musicians) {
+                participantsHTML += `<h3>Musical Selections</h3><div class="preview-content">${formData.musicians.replace(/\n/g, '<br>')}</div>`;
+            }
+            
+            participantsEl.innerHTML = participantsHTML;
+        }
+        
+        function updateAdditional() {
+            const additionalEl = document.getElementById('previewAdditional');
+            let additionalHTML = '';
+            
+            if (formData.donations) {
+                additionalHTML += `<h3>Memorial Donations</h3><div class="preview-content">${formData.donations.replace(/\n/g, '<br>')}</div>`;
+            }
+            
+            if (formData.reception) {
+                additionalHTML += `<h3>Reception</h3><div class="preview-content">${formData.reception.replace(/\n/g, '<br>')}</div>`;
+            }
+            
+            if (formData.specialMessage) {
+                additionalHTML += `<h3>Special Message</h3><div class="preview-content" style="font-style: italic; text-align: center; padding: 20px; background: #f8f9fa; border-radius: 8px;">${formData.specialMessage.replace(/\n/g, '<br>')}</div>`;
+            }
+            
+            additionalEl.innerHTML = additionalHTML;
+        }
+        
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+        }
+        
+        function formatTime(timeString) {
+            const [hours, minutes] = timeString.split(':');
+            const date = new Date();
+            date.setHours(parseInt(hours), parseInt(minutes));
+            return date.toLocaleTimeString('en-US', { 
+                hour: 'numeric', 
+                minute: '2-digit',
+                hour12: true 
+            });
+        }
+        
+        function generateJSON() {
+            const jsonData = JSON.stringify(formData, null, 2);
+            const blob = new Blob([jsonData], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'memorial-service-data.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+        
+        function printPreview() {
+            const printWindow = window.open('', '', 'height=600,width=800');
+            const previewContent = document.getElementById('previewProgram').innerHTML;
+            
+            printWindow.document.write(`
+                <html>
+                    <head>
+                        <title>Memorial Service Program</title>
+                        <style>
+                            body { font-family: Georgia, serif; padding: 40px; line-height: 1.6; }
+                            .preview-header { text-align: center; margin-bottom: 30px; }
+                            .preview-name { font-size: 2.2em; margin-bottom: 10px; }
+                            .preview-dates { font-size: 1.1em; font-style: italic; color: #666; }
+                            h3 { color: #333; margin: 20px 0 10px 0; border-bottom: 1px solid #ccc; padding-bottom: 5px; }
+                            .service-details { background: #f8f9fa; padding: 15px; margin: 15px 0; }
+                            .pallbearers-list { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+                            @media print { body { padding: 20px; } }
+                        </style>
+                    </head>
+                    <body>${previewContent}</body>
+                </html>
+            `);
+            
+            printWindow.document.close();
+            printWindow.focus();
+            printWindow.print();
+        }
+        
+        // Initialize preview
+        updatePreview();
+    </script>
+</body>
+</html>
